@@ -1,2 +1,2 @@
 # Jaily
-Just Assume Intelligence Like Yours
+Just Another Interpreter Like Yours
