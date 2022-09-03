@@ -1,0 +1,16 @@
+___________________________________________________-
+v14
+
+This version supports the following new instructions:
+- "tstmp" stores timestamp in A
+- "redim a" redimensions the packet according to the value in the accumulator (in case you want to shorten or enlarge the packet, this wasn't previously possible).
+- "cbo" and "cboh" to change byte order in A, for 4 octets or the lowest 2 octets repsectively.
+- "ococs16 a" -- will calculate "IP checksum" (also used for TCP and UDP) starting at packet[X] and for length A and store the result in A.
+
+All other behaviour should be unchanged from the previous version of the
+toolchain.
+
+Since there are new instructions, we might need to go through a couple of
+iterations to ensure that the behaviour is implemented correctly, and
+I've added warnings when these instructions appear in the BPF code.
+

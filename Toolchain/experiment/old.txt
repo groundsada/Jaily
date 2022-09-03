@@ -1,0 +1,11 @@
+next0: ldh      [12]
+next1: jeq      #0x800           , l1 , next8
+l1: ld #170188803
+f1: ldx #26
+d: ?dump
+next3: stb [x + 0]
+l2: ld [26]
+n01: ?dump
+next8: ret      #262144
+next9: ret   #0
+

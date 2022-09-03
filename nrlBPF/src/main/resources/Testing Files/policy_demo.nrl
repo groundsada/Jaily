@@ -1,0 +1,262 @@
+-----------------------------------------------------------------------------
+-- Natural Rule Language File 
+-- 
+-- Whenever you save this file, it will be automatically checked for errors.
+-- Press CTRL+Space to get help with referring to your model elements.
+-----------------------------------------------------------------------------
+
+Model "pcap.dfdl.xsd"
+
+Rule Set "Expressions"
+
+Context: Packet
+Validation Rule "d1"
+IPSrc is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d2"
+IPDest is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d3"
+PortSRC is 1000
+
+Context: Packet
+Validation Rule "d4"
+PortDest is 6000
+
+Context: Packet
+Validation Rule "d5"
+Protocol is equal to '6' and Seq is not equal to '1448654817'
+
+Context: Packet
+Validation Rule "d6"
+Protocol is equal to '6' and Ack is not equal to '784156569'
+
+Context: Packet
+Validation Rule "d7"
+If Protocol is '1' then Type is '0'
+
+Context: Packet
+Validation Rule "d8"
+If Protocol is '1' then Identifier > 600
+
+Context: Packet
+Validation Rule "d9"
+IPSrc = '10.49.247.88' or IPDest = '10.1.1.1'
+
+Context: Packet
+Validation Rule "d10"
+IPSrc = '1.1.1.1' and IPDest = '1.1.1.1'
+
+Context: Packet
+Validation Rule "d11"
+If Ethertype is '2048' and IPDest is '174.137.42.77' or Protocol is equal to '6' then TTL is less than 60
+
+Context: Packet
+Validation Rule "d12"
+If Protocol is '1' then SequenceNumber > 8700
+
+Context: Packet
+Validation Rule "d13"
+IPSrc is '10.49.255.123'
+
+Context: Packet
+Validation Rule "d14"
+IPDest is '198.32.64.12'
+
+Context: Packet
+Validation Rule "d15"
+If Protocol is '17' then Length is greater than 10
+
+Context: Packet
+Validation Rule "d16"
+If Protocol is not equal to '17' then Length is greater than 10
+
+Context: Packet
+Validation Rule "d17"
+If Protocol is '17' then PortSRC is greater than 2000 and PortSRC is less than 6000
+
+Context: Packet
+Validation Rule "d18"
+If Protocol is not equal to '17' then PortDest is greater than 2000
+
+Context: Packet
+Validation Rule "d19"
+MACSrc is not equal to '0:2:3:4:5:6'
+
+Context: Packet
+Validation Rule "d20"
+MACDest is not equal to '0:2:3:4:5:6'
+
+Context: Packet
+Validation Rule "d21"
+Length < 10000
+
+Context: Packet
+Validation Rule "d22"
+If Ethertype is '2048' then Version is '4'
+
+Context: Packet
+Validation Rule "d23"
+If Ethertype is '2048' then TTL > 15
+
+Context: Packet
+Validation Rule "d24"
+If Ethertype is '34525' then Protocol is '1'
+
+Context: Packet
+Validation Rule "d25"
+If Protocol is '1' then Ethertype is '34525'
+
+Context: Packet
+Validation Rule "d26"
+IPSrc is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d27"
+IPDest is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d28"
+PortSRC > 1000
+
+Context: Packet
+Validation Rule "d29"
+PortDest < 6000
+
+Context: Packet
+Validation Rule "d30"
+Protocol is equal to '6' and Seq is not equal to '1448654817'
+
+Context: Packet
+Validation Rule "d31"
+Protocol is equal to '6' and Ack is not equal to '784156569'
+
+Context: Packet
+Validation Rule "d32"
+If Protocol is '1' then Type is '0'
+
+Context: Packet
+Validation Rule "d33"
+IPSrc is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d34"
+IPDest is equal to '1.2.3.4'
+
+Context: Packet
+Validation Rule "d35"
+PortSRC > 1200
+
+Context: Packet
+Validation Rule "d36"
+PortDest < 4000
+
+Context: Packet
+Validation Rule "d37"
+Protocol is equal to '6' and Seq is not equal to '148654817'
+
+Context: Packet
+Validation Rule "d38"
+Protocol is equal to '6' and Ack is not equal to '74156569'
+
+Context: Packet
+Validation Rule "d39"
+If Protocol is '1' then Type is equal to '8'
+
+Context: Packet
+Validation Rule "d40"
+If Protocol is '1' then Identifier is less than  500
+
+Context: Packet
+Validation Rule "d41"
+IPSrc = '10.49.247.88' or IPDest = '10.1.1.1'
+
+Context: Packet
+Validation Rule "d42"
+IPDest = '1.1.1.1'
+
+Context: Packet
+Validation Rule "d43"
+If Ethertype is '2048' or Protocol is equal to '6' then TTL is less than 60
+
+Context: Packet
+Validation Rule "d44"
+If Protocol is '1' then SequenceNumber > 8700
+
+Context: Packet
+Validation Rule "d45"
+IPSrc is '10.49.255.123'
+
+Context: Packet
+Validation Rule "d46"
+IPDest is '198.32.64.12'
+
+Context: Packet
+Validation Rule "d47"
+If Protocol is '17' then Length is greater than 10
+
+Context: Packet
+Validation Rule "d48"
+If Protocol is not equal to '17' then Length is greater than 10
+
+Context: Packet
+Validation Rule "d49"
+If Protocol is '17' then PortSRC is greater than 2000 and PortSRC is less than 6000
+
+Context: Packet
+Validation Rule "d50"
+If Protocol is not equal to '17' then PortDest is greater than 2000
+
+Context: Packet
+Validation Rule "d51"
+MACSrc is not equal to '1:1:1:1:1:1'
+
+Context: Packet
+Validation Rule "d52"
+MACDest is not equal to '1:1:1:1:1:1'
+
+Context: Packet
+Validation Rule "d53"
+Length < 10000
+
+Context: Packet
+Validation Rule "d54"
+If Ethertype is '2048' then Version is '4'
+
+Context: Packet
+Validation Rule "d55"
+If Ethertype is '2048' then TTL > 15
+
+Context: Packet
+Validation Rule "d56"
+If Ethertype is '34525' then Protocol is '1'
+
+Context: Packet
+Validation Rule "d57"
+If Protocol is '1' then Ethertype is '34525'
+
+Context: Packet
+Validation Rule "d58"
+IPSrc is equal to '2.3.4.5'
+
+Context: Packet
+Validation Rule "d59"
+IPDest is equal to '5.6.7.8'
+
+Context: Packet
+Validation Rule "d60"
+PortSRC > 900
+
+Context: Packet
+Validation Rule "d61"
+PortDest < 10000
+
+Context: Packet
+Validation Rule "d62"
+Seq is not equal to '1448654817'
+
+Context: Packet
+Validation Rule "d63"
+Protocol is equal to '6' and Ack is not equal to '784156569'

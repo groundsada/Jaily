@@ -1,0 +1,50 @@
+next1l1: ldh [12]
+next1l2: jeq #0x86dd , next1l3 , next1l8
+next1l3: ldb [20]
+next1l4: jeq #0x6 , next2l1 , next1l5
+next1l5: jeq #0x2c , next1l6 , drop
+next1l6: ldb [54]
+next1l7: jeq #0x6 , next2l1 , drop
+next1l8: jeq #0x800 , next1l9 , drop
+next1l9: ldb [23]
+next1l10: jeq #0x6 , next2l1 , drop
+
+
+next2l1: ldh [12]
+next2l2: jeq #0x800 , next2l3 , next2l5
+next2l3: ld [30]
+next2l4: jeq #0xa31f758 , next3l1 , drop
+next2l5: jeq #0x806 , next2l7 , next2l6
+next2l6: jeq #0x8035 , next2l7 , drop
+next2l7: ld [38]
+next2l8: jeq #0xa31f758 , next3l1 , drop
+
+
+next3l1: ldh [12]
+next3l2: jeq #0x800 , next3l3 , next3l7
+next3l3: ldx #26
+next3l4: ld #0xc0a80101
+next3l5: st [x+0]
+next3l6: ld [26]
+next3l7: jeq #0x806 , next3l9 , next3l8
+next3l8: jeq #0x8035 , next3l9 , next4l1
+next3l9: ldx #28
+next3l10: ld #0xc0a80101
+next3l11: st [x+0]
+next3l12: ld [28]
+
+
+next4l1: ldh [12]
+next4l2: jeq #0x800 , next4l3 , next4l7
+next4l3: ldx #30
+next4l4: ld #0xc0a80101
+next4l5: st [x+0]
+next4l6: ld [26]
+next4l7: jeq #0x806 , next4l9 , next4l8
+next4l8: jeq #0x8035 , next4l9 , keep
+next4l9: ldx #38
+next4l10: ld #0xc0a80101
+next4l11: st [x+0]
+next4l12: ld [28]
+keep: ret #262144
+drop: ret #0

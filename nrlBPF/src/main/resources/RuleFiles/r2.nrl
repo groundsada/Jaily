@@ -1,0 +1,22 @@
+-----------------------------------------------------------------------------
+-- Natural Rule Language File 
+-- 
+-- Whenever you save this file, it will be automatically checked for errors.
+-- Press CTRL+Space to get help with referring to your model elements.
+-----------------------------------------------------------------------------
+
+Model "pcap.dfdl.xsd"
+
+Rule Set "Expressions"
+
+Context: Packet
+Validation Rule "c2"
+Protocol = '6'
+
+Context: Packet
+Action Rule "c3"
+If Protocol = '6' then set IPSrc to '192.168.1.1';
+
+Context: Packet
+Action Rule "c4"
+If Protocol = '6' then set IPDest to '1.1.168.192';

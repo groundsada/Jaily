@@ -1,0 +1,14 @@
+-----------------------------------------------------------------------------
+-- Natural Rule Language File 
+-- 
+-- Whenever you save this file, it will be automatically checked for errors.
+-- Press CTRL+Space to get help with referring to your model elements.
+-----------------------------------------------------------------------------
+
+Model "pcap.dfdl.xsd"
+
+Rule Set "Expressions"
+
+Context: Packet
+Action Rule "a1"
+set PortSRC to '1111'

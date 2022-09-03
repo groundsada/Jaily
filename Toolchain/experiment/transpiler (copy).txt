@@ -1,0 +1,16 @@
+l1: ldh [12]
+l2: jeq #0x86dd , l3 , l5
+l3: ldh [54]
+l4: jeq #0x430  , remember1 , l8
+remember1: ld[28]
+remember1a: st M[1]
+remember1b: jmp l8
+l5: jeq #0x800 ,l6 , l8
+l6: ldh [54]
+l7: jeq #0x430 , remember2 , l8
+remember2: ld [26]
+remember2s: st M[2]
+remember2b: jmp l8
+l8: ret #262144
+l9: ret #0
+

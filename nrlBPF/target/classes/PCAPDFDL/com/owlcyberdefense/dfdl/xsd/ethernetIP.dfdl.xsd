@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Copyright (c) 2012-2021 Owl Cyber Defense. All rights reserved.
+
+Developed by: Owl Cyber Defense
+              http://www.owlcyberdefense.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal with
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+ 1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimers.
+
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimers in the
+    documentation and/or other materials provided with the distribution.
+
+ 3. Neither the names of Owl Cyber Defense, nor the names of its contributors
+    may be used to endorse or promote products derived from this Software
+    without specific prior written permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
+SOFTWARE.
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/"
+           xmlns:dfdlx="http://www.ogf.org/dfdl/dfdl-1.0/extensions"
+           xmlns:fn="http://www.w3.org/2005/xpath-functions"
+           xmlns:daf="urn:ogf:dfdl:2013:imp:daffodil.apache.org:2018:ext"
+           xmlns:b="urn:basicBinary"
+           xmlns:ip="urn:ipAddress"
+           xmlns:eth="urn:ethernet"
+           xmlns:tns="urn:ethernet"
+           targetNamespace="urn:ethernet">
+
+  <xs:import namespace="urn:basicBinary" schemaLocation="basicByteBinary.dfdl.xsd"/>
+  <xs:import namespace="urn:ipAddress" schemaLocation="ipAddress.dfdl.xsd"/>
+
+  <xs:annotation>
+    <xs:appinfo source="http://www.ogf.org/dfdl/">
+
+      <dfdl:format ref="b:basicByteBinary"/>
+
+    </xs:appinfo>
+  </xs:annotation>
+
+  <!--
+  This schema does not define any global elements.
+
+  This is because ethernet data is always contained in some other medium such as a PCAP file.
+  -->
+
+  <xs:complexType name="Ethernet">
+    <xs:sequence>
+      <xs:element name="MACDest" type="b:hexByte" dfdl:length="6" />
+      <xs:element name="MACSrc" type="b:hexByte" dfdl:length="6" />
+      <xs:element name="Ethertype" type="b:bit" dfdl:length="16"
+                  dfdl:outputValueCalc="{
+          if (fn:exists(../NetworkLayer/IPv4)) then 2048
+          else if (fn:exists(../NetworkLayer/IPv6 )) then 34525
+          else fn:error('ethernet', 'fn:error called.', .) }"/>
+      <xs:element name="NetworkLayer" type="tns:NetworkLayer" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- NETWORK LAYER -->
+
+  <xs:complexType name="NetworkLayer">
+    <xs:choice dfdl:choiceDispatchKey="{ xs:string(../Ethertype) }">
+      <xs:element dfdl:choiceBranchKey="2048" name="IPv4" type="tns:IPv4" />
+      <xs:element dfdl:choiceBranchKey="34525" name="IPv6" type="tns:IPv6" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="IPv4">
+    <xs:sequence>
+      <xs:element name='IPv4Header'>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Version" type="b:bit" dfdl:length="4" />
+            <xs:element name="IHL" type="b:bit" dfdl:length="4" />
+            <xs:element name="DSCP" type="b:bit" dfdl:length="6" />
+            <xs:element name="ECN" type="b:bit" dfdl:length="2" />
+            <xs:element name="Length" type="b:bit" dfdl:length="16"
+                        dfdl:outputValueCalc="{
+                if (fn:exists(../../TransportLayer))
+                then
+                  (if (fn:exists(../../TransportLayer/UDP))
+                    then dfdl:valueLength(../../TransportLayer/UDP/Data, 'bytes') + 20 + 8
+                    else dfdl:valueLength(../../TransportLayer/TCP/Data, 'bytes') +
+                         dfdl:valueLength(../../TransportLayer/TCP/TCPHeader/Options, 'bytes') + 20 + 20
+                  )
+                else if (fn:exists(../../ICMPv4/EchoRequest))
+                     then dfdl:valueLength(../../ICMPv4/EchoRequest/Payload, 'bytes') + 20 + 8
+                     else dfdl:valueLength(../../ICMPv4/EchoReply/Payload, 'bytes') + 20 + 8
+                } "/>
+            <xs:element name="Identification" type="b:bit" dfdl:length="16" />
+            <xs:element name="Flags" type="b:bit" dfdl:length="3" />
+            <xs:element name="FragmentOffset" type="b:bit" dfdl:length="13" />
+            <xs:element name="TTL" type="b:bit" dfdl:length="8" />
+            <xs:element name="Protocol" type="b:bit" dfdl:length="8"
+                        dfdl:outputValueCalc="{
+                if (fn:exists(../../ICMPv4)) then 1
+                else if (fn:exists(../../TransportLayer/TCP)) then 6
+                else if (fn:exists(../../TransportLayer/UDP)) then 17
+                else -1 }"/>
+            <xs:element name="Checksum" type="b:bit" dfdl:length="16" />
+            <xs:element name="IPSrc" type="ip:IPAddress"/>
+            <xs:element name="IPDest" type="ip:IPAddress"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Protocol" type="xs:unsignedInt" dfdl:inputValueCalc="{ xs:unsignedInt(../IPv4Header/Protocol) }" />
+      <xs:choice dfdl:choiceDispatchKey="{ xs:string(./Protocol) }">
+        <xs:element dfdl:choiceBranchKey="6 17" name="TransportLayer" type="tns:TransportLayer"
+                    dfdl:lengthKind="explicit" dfdl:lengthUnits="bytes"
+                    dfdl:length="{ xs:unsignedInt(../IPv4Header/Length) - 20 }" />
+        <xs:element dfdl:choiceBranchKey="1" name="ICMPv4" type="tns:ICMPv4"
+                    dfdl:lengthKind="explicit" dfdl:lengthUnits="bytes"
+                    dfdl:length="{ xs:unsignedInt(../IPv4Header/Length) - 20 }"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ICMPv4">
+    <xs:sequence>
+      <xs:element name="Type" type="b:bit" dfdl:length="8"
+                  dfdl:outputValueCalc="{
+          if (fn:exists(../EchoRequest)) then 8
+          else if (fn:exists(../EchoReply )) then 0
+          else -1 }"/>
+      <xs:element name="Code" type="b:bit" dfdl:length="8"
+                  dfdl:outputValueCalc="{
+          if (fn:exists(../EchoRequest)) then 0
+          else if (fn:exists(../EchoReply )) then 0
+          else -1 }"/>
+      <xs:element name="Checksum" type="b:bit" dfdl:length="16" />
+      <xs:choice dfdl:choiceDispatchKey="{ fn:concat(xs:string(./Type), '_', xs:string(./Code)) }" >
+        <xs:element name="EchoRequest" dfdl:choiceBranchKey="8_0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Identifier" type="b:bit" dfdl:length="16" />
+              <xs:element name="SequenceNumber" type="b:bit" dfdl:length="16" />
+              <xs:element name="Payload" type="b:hexByte" dfdl:length="{ (../../../IPv4Header/Length - 20) - 8 }"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EchoReply" dfdl:choiceBranchKey="0_0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Identifier" type="b:bit" dfdl:length="16" />
+              <xs:element name="SequenceNumber" type="b:bit" dfdl:length="16" />
+              <xs:element name="Payload" type="b:hexByte" dfdl:length="{ (../../../IPv4Header/Length - 20) - 8 }" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IPv6">
+    <xs:sequence>
+      <xs:element name='IPv6Header'>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Version" type="b:bit" dfdl:length="4" />
+            <xs:element name="TrafficClass" type="b:bit" dfdl:length="8" />
+            <xs:element name="FlowLabel" type="b:bit" dfdl:length="20" />
+            <xs:element name="PayloadLength" type="b:bit" dfdl:length="16"
+                        dfdl:outputValueCalc="{
+                  if (fn:exists(../../TransportLayer/UDP))
+                    then dfdl:valueLength(../../TransportLayer/UDP/Data, 'bytes') + 8
+                    else dfdl:valueLength(../../TransportLayer/TCP/Data, 'bytes') +
+                         dfdl:valueLength(../../TransportLayer/TCP/TCPHeader/Options, 'bytes') + 20
+                } "/>
+            <!-- TODO: Add support for extension headers -->
+            <xs:element name="NextHeader" type="b:bit" dfdl:length="8"
+                        dfdl:outputValueCalc="{
+                  if (fn:exists(../../TransportLayer/TCP )) then 6
+                  else if (fn:exists(../../TransportLayer/UDP )) then 17
+                  else -1 }"/>
+            <xs:element name="HopLimit" type="b:bit" dfdl:length="8" />
+            <xs:element name="IPSrc">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" type="b:hexByte" dfdl:length="16" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="IPDest">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="value" type="b:hexByte" dfdl:length="16" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Protocol" type="xs:unsignedInt" dfdl:inputValueCalc="{ xs:unsignedInt(../IPv6Header/NextHeader) }" />
+      <xs:element name="TransportLayer" type="tns:TransportLayer" dfdl:lengthKind="explicit" dfdl:lengthUnits="bytes" dfdl:length="{ xs:unsignedInt(../IPv6Header/PayloadLength) }" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- TRANSPORT LAYER -->
+
+  <xs:complexType name="TransportLayer">
+    <xs:choice dfdl:choiceDispatchKey="{ xs:string(../Protocol) }">
+      <xs:element name="TCP" type="tns:TCP" dfdl:choiceBranchKey="6"/>
+      <xs:element name="UDP" type="tns:UDP" dfdl:choiceBranchKey="17"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="TCP">
+    <xs:sequence>
+      <xs:element name='TCPHeader'>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PortSRC" type="b:bit" dfdl:length="16" />
+            <xs:element name="PortDest" type="b:bit" dfdl:length="16" />
+            <xs:element name="Seq" type="b:bit" dfdl:length="32" />
+            <xs:element name="Ack" type="b:bit" dfdl:length="32" />
+            <xs:element name="DataOffset" type="b:bit" dfdl:length="4"
+                        dfdl:outputValueCalc="{ xs:unsignedInt((dfdl:valueLength(../Options, 'bytes') div 4) + 5) }" />
+            <xs:element name="Reserved" type="b:bit" dfdl:length="3" />
+            <xs:element name="Flags" type="b:bit" dfdl:length="9" />
+            <xs:element name="WindowSize" type="b:bit" dfdl:length="16" />
+            <xs:element name="Checksum" type="b:bit" dfdl:length="16" />
+            <xs:element name="Urgent" type="b:bit" dfdl:length="16" />
+            <xs:element name="Options" type="b:hexByte" dfdl:length="{ (xs:unsignedInt(../DataOffset) - 5) * 4 }" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Data" type="b:hexByte" dfdl:length="{
+          if (fn:exists(../../../../IPv4))
+          then ((xs:unsignedInt(../../../../IPv4/IPv4Header/Length) - 20) - (xs:unsignedInt(../TCPHeader/DataOffset) * 4))
+          else (xs:unsignedInt(../../../../IPv6/IPv6Header/PayloadLength) - (xs:unsignedInt(../TCPHeader/DataOffset) * 4)) }"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="UDP">
+    <xs:sequence>
+      <xs:element name='UDPHeader'>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PortSrc" type="b:bit" dfdl:length="16" />
+            <xs:element name="PortDest" type="b:bit" dfdl:length="16" />
+            <xs:element name="Length" type="b:bit" dfdl:length="16"
+                        dfdl:outputValueCalc="{ dfdl:valueLength(../../Data, 'bytes') + 8 }"/>
+            <xs:element name="Checksum" type="b:bit" dfdl:length="16" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Data" type="b:hexByte" dfdl:length="{ xs:unsignedInt(../UDPHeader/Length) - 8 }"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

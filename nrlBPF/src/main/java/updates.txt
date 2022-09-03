@@ -1,0 +1,7 @@
+FRIDAY Sep 2nd:
+TO DO:
+- Change to jmp
+- iterate through files in directory
+DONE:
+LONG TO DO:
+- Add DFDL parsing and DFDL Models
