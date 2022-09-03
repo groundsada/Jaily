@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+TC_DIR=~/Downloads/hook/
+IN_TXT=experiment/transpiler.txt
+
+cd $TC_DIR
+
+_build/coton.native --convert_labelled_to_symbolic $IN_TXT > file1
+_build/coton.native --convert_symbolic_to_C --absolute_jump_offsets file1 > generated.c
+make harness
+./harness -i fuzz.pcap > file2
+rm file1 file2
+echo "\n>>>\tCompleted Successfully"

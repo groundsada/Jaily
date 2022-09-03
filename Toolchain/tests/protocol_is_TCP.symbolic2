@@ -11,6 +11,6 @@ jeq #2048 jt 8 jf 12
 ldb [23]
 jeq #6 jt 10 jf 12
 ?dump
-ret #0
-?print this
 ret #262144
+?print this
+ret #0

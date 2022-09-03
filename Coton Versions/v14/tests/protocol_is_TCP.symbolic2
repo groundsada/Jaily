@@ -1,0 +1,16 @@
+; comments
+;; more comments
+ldh [12]
+jeq #34525 jt 2 jf 7
+ldb [20]
+jeq #6 jt 10 jf 4
+jeq #44 jt 5 jf 12
+ldb [54]
+jeq #6 jt 10 jf 12
+jeq #2048 jt 8 jf 12
+ldb [23]
+jeq #6 jt 10 jf 12
+?dump
+ret #262144
+?print this
+ret #0

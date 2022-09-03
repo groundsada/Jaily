@@ -1,0 +1,13 @@
+;; Rule 1: Id: c2, Constraint type: IBinaryPredicate
+rule1p1line1: ldh [12]
+rule1p1line2: jeq #34525 , rule1p1line3 , rule1p2line1
+rule1p1line3: ldh [52]
+rule1p1line4: jeq #1072 , rule2p1line1 , drop
+rule1p2line1: ldh [12]
+rule1p2line2: jeq #2048 , rule1p2line3 , rule1p3line1
+rule1p2line3: ldh [32]
+rule1p2line4: jeq #1072 , rule2p1line1 , drop
+rule1p3line1: add #0
+;; end of rules, packets are either accepted or dropped
+rule2p1line1: ret #262144
+drop: ret #0
