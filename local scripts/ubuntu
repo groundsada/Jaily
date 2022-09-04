@@ -11,7 +11,14 @@ do
 	_build/coton.native --convert_symbolic_to_C file1 --absolute_jump_offsets > generated.c
 	make harness
 	./harness -i fuzz.pcap > file2
-	#rm file1 file2
+	rm file1 file2
+    #mv output.pcap ${file##*/}/output.pcap
+    basename "$file"
+    f="$(basename -s .txt $file)"
+    mkdir $TOOL_DIR/../nrlBPF/Toolchain\ Output/$f
+	mv output.pcap $TOOL_DIR/../nrlBPF/Toolchain\ Output/$f/output.pcap
+	mv output.txt $TOOL_DIR/../nrlBPF/Toolchain\ Output/$f/output.csv
+    cp $file $TOOL_DIR/../nrlBPF/Toolchain\ Output/$f/input.txt
 	echo "\n>>>\tCompleted Successfully"
 done
 
@@ -26,5 +33,3 @@ done
 #./harness -i fuzz.pcap > file2
 #rm file1 file2
 #echo "\n>>>\tCompleted Successfully"
-
-

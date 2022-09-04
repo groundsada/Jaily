@@ -27,9 +27,9 @@ $(TGT): udf.c generated.c harness.o
 
 aux.o: aux.c
 	$(CC) $(CFLAGS) aux.c -c
-$(TGT).o: harness.c resources.h aux.o
-	$(CC) $(CFLAGS) harness.c -c -o pre-harness.o
-	ld -r pre-harness.o aux.o -o harness.o
+#$(TGT).o: harness.c resources.h aux.o
+#	$(CC) $(CFLAGS) harness.c -c -o pre-harness.o
+#	ld -r pre-harness.o aux.o -o harness.o
 
 info:
 	uname -a
