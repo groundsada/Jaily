@@ -26,6 +26,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -34,19 +35,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/nrlparser-1.4.6.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/activation-1.1.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/antlr-2.7.7.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/antlr-runtime-3.2.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/jaxb-api-2.2.2.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.emf.common-2.6.0.v20100614-1136.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.emf.ecore.xmi-2.5.0.v20100521-1846.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.emf.ecore-2.6.0.v20100614-1136.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.emf.mapping.ecore2xml-2.5.0.v20100521-1847.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.uml2.common-1.5.0.v201005031530.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/org.eclipse.uml2.uml-3.1.0.v201006071150.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/stax-api-1.0-2.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/stringtemplate-3.2.jar"/>
-	<classpathentry kind="lib" path="/home/firas/Desktop/nrlparser-1.4.6/lib/xsd-2.2.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
